@@ -1,0 +1,38 @@
+pipeline{
+    agent{
+        label ('JAVA_11')
+    }
+    environment {
+        //AWS_ACCOUNT_ID='aws account number'
+        //AWS_DEFAULT_REGION='region'
+        //IMAGE_REPO-NAME='jenkins/spring-pet'
+        //IMAGE_TAG='1.0'
+        //REPOSITORY_URI='${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO-NAME}'
+        registry='pvenkateswararo/spring-pet'
+        dockerImage=''
+        registryCredential='Dockerhub_id'
+    }
+    stages{
+        stage('scm'){
+            steps{
+                 git '' 
+            }
+        }
+
+        stage('image build'){
+            steps{
+                 sh 'docker build -t pvenkateswararo/spring-pet .'
+              }
+        }
+        stage('upload image'){
+            steps{
+                script{
+                    docker.withRegistry('', registryCredential){
+                    dockerImage.push()    
+                    }
+                }
+            }
+        }
+    }
+}
+
