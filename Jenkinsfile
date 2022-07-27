@@ -20,14 +20,14 @@ pipeline{
         }
         stage('build image'){
             steps{
-                sh 'docker build -t ${registry}:2.10 .'
+                sh 'sudo docker build -t ${registry}:2.10 .'
             }
         }
         stage('push image into Dockerhub'){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'Dockerhub_id', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]){
-                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-                    sh 'docker push pvenkateswarrao/spring-pet:2.10'
+                    sh "sduo docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                    sh 'sudo docker push pvenkateswarrao/spring-pet:2.10'
                 }
             }
         }
@@ -36,17 +36,17 @@ pipeline{
                 sh 'kubectl apply -f spring-pet-deploy.yml'
             }
         }
-        stage(deploy to production){
+        stage('deploy to production'){
             steps{
                 sh 'kubectl create deployment prod-pod --image=pvenkateswarrao/spring-pet:2.10  -n=production --replicas=2'
             }
         }
-        stage(deploy to develper){
+        stage('deploy to develper'){
             steps{
                 sh 'kubectl create deployment dev-pod --image=pvenkateswarrao/spring-pet:2.10  -n=developer --replicas=2'
             }
         }
-        stage(deploy to test){
+        stage('deploy to test'){
             steps{
                 sh 'kubectl create deployment test-pod --image=pvenkateswarrao/spring-pet:2.10  -n=test --replicas=2'
             }
