@@ -26,7 +26,7 @@ pipeline{
         stage('push image into Dockerhub'){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'Dockerhub_id', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]){
-                    sh "sduo docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                    sh "sudo docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
                     sh 'sudo docker push pvenkateswarrao/spring-pet:2.10'
                 }
             }
